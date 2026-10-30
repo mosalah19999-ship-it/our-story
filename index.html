@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قصتنا ❤️</title>
+<style>
+:root {
+--bg-color: #f7eded;
+--card-bg: #ffffff;
+--primary: #d87070;
+--text-color: #4a3e3e;
+--chat-bg-1: #fce8e8;
+--chat-bg-2: #e8f0fc;
+}
+
+body {
+margin: 0;
+padding: 15px;
+background-color: var(--bg-color);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+color: var(--text-color);
+display: flex;
+justify-content: center;
+}
+
+.container {
+max-width: 400px;
+width: 100%;
+}
+
+/* 1. مرحلة الظرف وكلمة السر */
+.lock-screen {
+text-align: center;
+background: #f0e2e2;
+border-radius: 20px;
+padding: 30px 20px;
+box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.envelope {
+font-size: 3rem;
+margin-bottom: 10px;
+}
+
+input[type="text"] {
+width: 80%;
+padding: 12px;
+border: 1px solid #ccc;
+border-radius: 25px;
+text-align: center;
+font-size: 1rem;
+outline: none;
+margin-top: 15px;
+}
+
+.btn {
+background: var(--primary);
+color: white;
+border: none;
+padding: 12px 30px;
+border-radius: 25px;
+font-size: 1rem;
+cursor: pointer;
+margin-top: 15px;
+font-weight: bold;
+}
+
+/* 2. المحتوى الرئيسي للموقع */
+.main-content {
+display: none;
+animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(15px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* العداد التنازلي / التراكمي */
+.timer-card {
+background: var(--card-bg);
+border-radius: 20px;
+padding: 20px;
+text-align: center;
+margin-bottom: 20px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.timer-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 8px;
+margin-top: 15px;
+}
+
+.timer-box {
+background: #faf2f2;
+padding: 10px 5px;
+border-radius: 12px;
+}
+
+.timer-box .num {
+font-size: 1.2rem;
+font-weight: bold;
+color: var(--primary);
+}
+
+.timer-box .label {
+font-size: 0.75rem;
+color: #888;
+}
+
+/* شات الرسائل */
+.chat-card {
+background: var(--card-bg);
+border-radius: 20px;
+padding: 15px;
+margin-bottom: 20px;
+}
+
+.msg {
+padding: 10px 14px;
+border-radius: 15px;
+margin-bottom: 10px;
+max-width: 80%;
+font-size: 0.9rem;
+line-height: 1.4;
+}
+
+.msg.right {
+background: var(--chat-bg-1);
+margin-left: auto;
+}
+
+.msg.left {
+background: var(--chat-bg-2);
+margin-right: auto;
+}
+
+/* صندوق المفاجأة */
+.gift-card {
+background: var(--card-bg);
+border-radius: 20px;
+padding: 20px;
+text-align: center;
+margin-bottom: 20px;
+cursor: pointer;
+}
+
+.gift-box {
+font-size: 3.5rem;
+transition: transform 0.3s;
+}
+
+.gift-box:hover {
+transform: scale(1.1);
+}
+
+.hidden-photo {
+display: none;
+margin-top: 15px;
+animation: fadeIn 0.8s;
+}
+
+.hidden-photo img {
+width: 100%;
+border-radius: 15px;
+}
+
+/* معرض الصور */
+.photo-item {
+background: white;
+padding: 10px;
+border-radius: 15px;
+margin-bottom: 15px;
+text-align: center;
+}
+
+.photo-item img {
+width: 100%;
+border-radius: 10px;
+}
+
+.error-msg {
+color: red;
+font-size: 0.85rem;
+margin-top: 8px;
+display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- شاشة إدخال كلمة السر -->
+<div id="lockScreen" class="lock-screen">
+<div class="envelope">✉️</div>
+<h3>مش عارف رد فعلك هيبقى ايه... بس عملتلك المكان ده مخصوص ليكي ❤️</h3>
+<p style="font-size: 0.85rem; color: #666;">اكتبي كلمة السر للدخول</p>
+<input type="text" id="secretInput" placeholder="اكتبي كلمة السر...">
+<div id="errorMsg" class="error-msg">كلمة السر غير صحيحة، جربي التاريخ بالشكل ده: 20/09/2016</div>
+<br>
+<button class="btn" onclick="checkPassword()">افتحي الهدية 🎀</button>
+</div>
+
+<!-- محتوى الموقع الرئيسي -->
+<div id="mainContent" class="main-content">
+
+<!-- العداد -->
+<div class="timer-card">
+<h3 style="margin: 0; color: var(--primary);">بدايتنا ❤️</h3>
+<p style="font-size: 0.8rem; color: #777; margin: 5px 0;">كل يوم بيعدي تزيد غلاوتك عندي وأشتاقلك وأحبك </p>
+<div class="timer-grid">
+<div class="timer-box"><div class="num" id="days">0</div><div class="label">يوم</div></div>
+<div class="timer-box"><div class="num" id="hours">0</div><div class="label">ساعة</div></div>
+<div class="timer-box"><div class="num" id="minutes">0</div><div class="label">دقيقة</div></div>
+<div class="timer-box"><div class="num" id="seconds">0</div><div class="label">ثانية</div></div>
+</div>
+</div>
+
+<!-- محادثة الرسائل -->
+<div class="chat-card">
+<div class="msg right">تزعلك الدنيا وأصالحك أنا😘</div>
+<div class="msg right"> وإن غبت سنة انا برضو أنا لا اقدر انساك ولا ليا غنى ولا اتوووب عن حبك أنا👈🏻👉🏻♥️</div>
+
+<!-- مشغل الأغنية -->
+<div class="timer-card">
+<p style="margin-top:0; font-weight:bold;">🎵 ليكي انتي وبس</p>
+<audio controls style="width: 100%;">
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+</div>
+
+<!-- صندوق المفاجأة التفاعلي -->
+<div class="gift-card" onclick="revealSurprise()">
+<p style="margin: 0; font-weight: bold;">لسه في حاجة مخبيها ليكي... 🎁</p>
+<div class="gift-box" id="giftIcon">🎁</div>
+<p style="font-size: 0.8rem; color: #888;">اضغطي هنا للفتح</p>
+
+<div id="surprisePhoto" class="hidden-photo">
+<img src="photo1.jpg" alt="مفاجأة">
+<p style="font-weight: bold; margin-top: 8px;">عايز أقولك إن ده أحسن قرار أخدته في حياتي ❤️</p>
+</div>
+</div>
+
+<!-- معرض الذكريات -->
+<div class="photo-item">
+<img src="photo2.jpg" alt="ذكرى">
+<p style="margin: 8px 0 0; font-size: 0.9rem;">هفضل معاكي على طول ❤️</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+// كلمة السر المحددة (يمكنك تغيير كلمة 20/09/2016 بأي كلمة)
+const SECRET_WORD = "20/09/2016";
+
+// تاريخ بداية المناسبة (السنة: 2016، الشهر: 8 وهو سبتمبر، اليوم: 20)
+// ملاحظة: الشهور في JS تبدأ من 0 (يعني شهر 1 هو 0، وشهر 9 هو 8)
+const startDate = new Date(2016, 8, 20);
+
+function checkPassword() {
+const input = document.getElementById('secretInput').value.trim();
+const error = document.getElementById('errorMsg');
+
+if (input === SECRET_WORD) {
+document.getElementById('lockScreen').style.display = 'none';
+document.getElementById('mainContent').style.display = 'block';
+startTimer();
+} else {
+error.innerText = "كلمة السر غير صحيحة، جربي التاريخ بالشكل ده: 20/09/2016";
+error.style.display = 'block';
+}
+}
+
+function revealSurprise() {
+document.getElementById('surprisePhoto').style.display = 'block';
+document.getElementById('giftIcon').innerText = '💖';
+}
+
+function startTimer() {
+setInterval(() => {
+const now = new Date();
+const diff = now - startDate;
+
+const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+const minutes = Math.floor((diff / 1000 / 60) % 60);
+const seconds = Math.floor((diff / 1000) % 60);
+
+document.getElementById('days').innerText = days;
+document.getElementById('hours').innerText = hours;
+document.getElementById('minutes').innerText = minutes;
+document.getElementById('seconds').innerText = seconds;
+}, 1000);
+}
+</script>
+
+</body>
+</html>
